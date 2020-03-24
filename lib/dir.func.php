@@ -48,7 +48,7 @@ function create_dir($path) {
     if (is_dir($path)) {
         return '当前目录已存在同名目录'.$path;
     }
-    if (!mkdir($path,755,true)) {
+    if (!mkdir($path,0755,true)) {
         return $path.'目录'.$path.'创建失败';
     }
     return true;
@@ -87,7 +87,7 @@ function cut_dir($oldName, $dst) {
     }
     //目标目录是否存在
     if (!is_dir($dst)) {
-        mkdir($dst,755,true);
+        mkdir($dst,0755,true);
     }
     //目标目录下是否存在同名目录
     $dest = $dst.DIRECTORY_SEPARATOR.basename($oldName);
@@ -112,7 +112,7 @@ function copy_dir($oldName, $dst) {
         return '目录'.$oldName.'不存在';
     }
     if (!is_dir($dst)) {
-        mkdir($dst,755,true);
+        mkdir($dst,0755,true);
     }
     $dest = $dst.DIRECTORY_SEPARATOR.basename($oldName);
     if (is_dir($dest)) {
@@ -120,14 +120,16 @@ function copy_dir($oldName, $dst) {
     }
     //打开文件句柄
     $handle = opendir($oldName);
+    // var_dump($handle);exit;
     //打开目录
-    while (($item = readdir($handle) !== false)) {
+    while (($item = readdir($handle)) !== false) {
         //去掉 . ..
         if ($item != '.' && $item != '..') {
             $oldFile = $oldName.DIRECTORY_SEPARATOR.$item;
             $newFile = $dst.DIRECTORY_SEPARATOR.$item;
             if (is_file($oldFile)) {
-                copy($oldFile,$newFile);
+                $a = copy($oldFile,$newFile);
+                // dump($a);exit;
             }
             if (is_dir($oldName)) {
                 $func = __FUNCTION__;
